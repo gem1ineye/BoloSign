@@ -18,7 +18,7 @@ export default function App() {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
   const fileInputRef = useRef();
-  const samplePdf = "/sample.pdf";
+  const samplePdf = new URL("/sample.pdf", window.location.origin).href;
 
   function handleSignatureUpload(e) {
     const file = e.target.files?.[0];

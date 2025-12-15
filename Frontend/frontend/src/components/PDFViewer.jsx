@@ -11,10 +11,18 @@ pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/$
 export default function PDFViewer({ fileUrl, fields, setFields }) {
   const [numPages, setNumPages] = useState(null);
   const [pageSize, setPageSize] = useState({ width: 0, height: 0 }); // rendered px
+  const [error, setError] = useState(null);
   const pageRef = useRef();
 
   function onDocumentLoadSuccess({ numPages }) {
     setNumPages(numPages);
+    console.log("✅ PDF loaded successfully:", fileUrl);
+    setError(null);
+  }
+
+  function onDocumentLoadError(err) {
+    console.error("❌ Failed to load PDF:", fileUrl, err);
+    setError(`Failed to load PDF: ${err.message}`);
   }
 
   // get rendered page size after render
@@ -32,7 +40,12 @@ export default function PDFViewer({ fileUrl, fields, setFields }) {
   // Render page 1 only for prototype (A4)
   return (
     <div style={{ position: "relative", width: "100%", maxWidth: 900 }}>
-      <Document file={fileUrl} onLoadSuccess={onDocumentLoadSuccess}>
+      {error && (
+        <div style={{ padding: 12, background: "#fee", border: "1px solid #fcc", borderRadius: 4, color: "#c00", marginBottom: 12 }}>
+          {error}
+        </div>
+      )}
+      <Document file={fileUrl} onLoadSuccess={onDocumentLoadSuccess} onLoadError={onDocumentLoadError}>
         <div style={{ position: "relative" }}>
           <Page
             pageNumber={1}
