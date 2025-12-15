@@ -47,9 +47,13 @@ export default function App() {
         fields,
       };
 
-      const res = await axios.post("http://localhost:4000/sign-pdf", payload, {
-        responseType: "arraybuffer",
-      });
+      const res = await axios.post(
+        "https://bolosign-gqh7.onrender.com",
+        payload,
+        {
+          responseType: "arraybuffer",
+        }
+      );
 
       const blob = new Blob([res.data], { type: "application/pdf" });
       const url = window.URL.createObjectURL(blob);
